@@ -76,6 +76,7 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete }) => 
           ))}
         </div>
 
+        {/* Game grid */}
         <div 
           className="game-grid"
           onMouseUp={handleMouseUp}

@@ -1,4 +1,3 @@
-
 export const generateRandomPuzzle = (size, fillProbability = 0.6, maxAttempts = 100) => {
   let attempts = 0;
   
@@ -51,6 +50,232 @@ export const generateAllClues = (solution) => {
   return { rowClues, colClues };
 };
 
+export const getGridSize = (difficulty) => {
+  switch (difficulty) {
+    case 'Easy': return 5;
+    case 'Medium': return 10;
+    case 'Hard': return 15;
+    default: return 5;
+  }
+};
+
+export const loadImageFromFile = (file) => {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      reject(new Error('Please select a valid image file'));
+      return;
+    }
+    
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Failed to load image'));
+    };
+    
+    img.src = url;
+  });
+};
+
+export const convertImageToGrid = (image, size, threshold = 128) => {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = size;
+  canvas.height = size;
+  
+  ctx.drawImage(image, 0, 0, size, size);
+  
+  const imageData = ctx.getImageData(0, 0, size, size);
+  const pixels = imageData.data;
+  
+  const grid = Array(size).fill().map(() => Array(size).fill(0));
+  
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const pixelIndex = (y * size + x) * 4;
+      
+      const r = pixels[pixelIndex];
+      const g = pixels[pixelIndex + 1];
+      const b = pixels[pixelIndex + 2];
+      const grayscale = 0.299 * r + 0.587 * g + 0.114 * b;
+      
+      grid[y][x] = grayscale < threshold ? 1 : 0;
+    }
+  }
+  
+  return grid;
+};
+
+export const optimizeImageGrid = (grid) => {
+  const size = grid.length;
+  const optimized = grid.map(row => [...row]);
+  
+  for (let y = 1; y < size - 1; y++) {
+    for (let x = 1; x < size - 1; x++) {
+      let filledNeighbors = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx === 0 && dy === 0) continue;
+          if (grid[y + dy][x + dx] === 1) filledNeighbors++;
+        }
+      }
+      
+      if (grid[y][x] === 1 && filledNeighbors < 2) {
+        optimized[y][x] = 0; 6
+        optimized[y][x] = 1; 
+      }
+    }
+  }
+  
+  return optimized;
+};
+
+export const generatePuzzleFromImage = async (imageFile, difficulty, options = {}) => {
+  try {
+    const {
+      threshold = 128,
+      optimize = true,
+      contrast = 1.0
+    } = options;
+    
+    const size = getGridSize(difficulty);
+    const image = await loadImageFromFile(imageFile);
+    
+    let processedImage = image;
+    if (contrast !== 1.0) {
+      processedImage = adjustImageContrast(image, contrast);
+    }
+    
+    let grid = convertImageToGrid(processedImage, size, threshold);
+    
+    if (optimize) {
+      grid = optimizeImageGrid(grid);
+    }
+    
+    const filledCells = grid.flat().filter(cell => cell === 1).length;
+    if (filledCells === 0) {
+      throw new Error('Image resulted in empty puzzle. Try adjusting threshold or using a different image.');
+    }
+    
+    const { rowClues, colClues } = generateAllClues(grid);
+    
+    return {
+      solution: grid,
+      rowClues,
+      colClues,
+      size,
+      sourceImage: imageFile.name
+    };
+    
+  } catch (error) {
+    console.error('Error generating puzzle from image:', error);
+    throw error;
+  }
+};
+
+export const adjustImageContrast = (image, contrast) => {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = image.width;
+  canvas.height = image.height;
+  
+  ctx.drawImage(image, 0, 0);
+  
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const pixels = imageData.data;
+  
+  for (let i = 0; i < pixels.length; i += 4) {
+    pixels[i] = Math.min(255, Math.max(0, (pixels[i] - 128) * contrast + 128));    
+    pixels[i + 1] = Math.min(255, Math.max(0, (pixels[i + 1] - 128) * contrast + 128)); 
+    pixels[i + 2] = Math.min(255, Math.max(0, (pixels[i + 2] - 128) * contrast + 128)); 
+  }
+  
+  ctx.putImageData(imageData, 0, 0);
+  
+  const adjustedImage = new Image();
+  adjustedImage.src = canvas.toDataURL();
+  return adjustedImage;
+};
+
+export const generatePuzzle = async (difficulty, generationType = 'Random Puzzle', imageFile = null, imageOptions = {}) => {
+  const size = getGridSize(difficulty);
+  
+  if (generationType === 'Random Puzzle') {
+    const solution = generateRandomPuzzle(size, 0.6);
+    const { rowClues, colClues } = generateAllClues(solution);
+    
+    return {
+      solution,
+      rowClues,
+      colClues,
+      size
+    };
+  }
+
+  if (generationType === 'Upload Image') {
+    if (!imageFile) {
+      throw new Error('Image file is required for image-based puzzles');
+    }
+    
+    return await generatePuzzleFromImage(imageFile, difficulty, imageOptions);
+  }
+  
+  return generatePuzzle(difficulty, 'Random Puzzle');
+};
+
+export const validateImageFile = (file, maxSizeMB = 5) => {
+  const errors = [];
+  
+  if (!file) {
+    errors.push('No file selected');
+    return errors;
+  }
+  
+  if (!file.type.startsWith('image/')) {
+    errors.push('File must be an image');
+  }
+  
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+  if (!allowedTypes.includes(file.type)) {
+    errors.push('Unsupported image format. Please use JPEG, PNG, GIF, BMP, or WebP');
+  }
+  
+  if (file.size > maxSizeMB * 1024 * 1024) {
+    errors.push(`File size must be less than ${maxSizeMB}MB`);
+  }
+  
+  return errors;
+};
+
+export const generateImagePreview = async (imageFile, difficulty, threshold = 128) => {
+  try {
+    const size = getGridSize(difficulty);
+    const image = await loadImageFromFile(imageFile);
+    
+    let grid = convertImageToGrid(image, size, threshold);
+    
+    grid = optimizeImageGrid(grid);
+    
+    return {
+      grid,
+      size,
+      filledCells: grid.flat().filter(cell => cell === 1).length,
+      totalCells: size * size
+    };
+  } catch (error) {
+    console.error('Error generating preview:', error);
+    throw error;
+  }
+};
+
 export const lineMatchesClues = (line, clues) => {
   const currentClues = generateClues(line);
   
@@ -100,38 +325,6 @@ export const checkWinConditionByClues = (currentGrid, rowClues, colClues) => {
   return true;
 };
 
-export const getGridSize = (difficulty) => {
-  switch (difficulty) {
-    case 'Easy': return 5;
-    case 'Medium': return 10;
-    case 'Hard': return 15;
-    default: return 5;
-  }
-};
-
-export const generatePuzzle = (difficulty, generationType = 'Random Puzzle') => {
-  const size = getGridSize(difficulty);
-  
-  if (generationType === 'Random Puzzle') {
-    const solution = generateRandomPuzzle(size, 0.6); //3/5 = 0.6 probability
-    const { rowClues, colClues } = generateAllClues(solution);
-    
-    return {
-      solution,
-      rowClues,
-      colClues,
-      size
-    };
-  }
-  
-  if (generationType === 'Image Selected') {
-    // TODO: Implement image-to-nonogram conversion
-    return generatePuzzle(difficulty, 'Random Puzzle');
-  }
-  
-  return generatePuzzle(difficulty, 'Random Puzzle');
-};
-
 export const hasUniqueSolution = (solution) => {
   const { rowClues, colClues } = generateAllClues(solution);
   const size = solution.length;
@@ -139,12 +332,11 @@ export const hasUniqueSolution = (solution) => {
   const solvedGrid = solveNonogram(rowClues, colClues, size);
   
   if (!solvedGrid) {
-    return false; //No solution found
+    return false;
   }
   
   return arraysEqual(solvedGrid, solution);
 };
-
 
 export const solveNonogram = (rowClues, colClues, size) => {
   let grid = Array(size).fill().map(() => Array(size).fill(-1));
@@ -299,8 +491,6 @@ export const solveWithBacktracking = (grid, rowClues, colClues) => {
 };
 
 export const isPartiallyValid = (grid, rowClues, colClues, lastRow, lastCol) => {
-  const size = grid.length;
-  
   const row = grid[lastRow];
   if (!row.includes(-1)) {
     if (!lineMatchesClues(row, rowClues[lastRow])) {

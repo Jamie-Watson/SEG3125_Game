@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameMode = 'fill' }) => {
   const gridSize = grid.length;
   const [isDragging, setIsDragging] = useState(false);
   const [dragValue, setDragValue] = useState(null);
+  const mouseDownRef = useRef(false);
 
   const isLargeGrid = gridSize > 10;
 
@@ -11,6 +12,8 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
     if (isComplete) return;
     
     event.preventDefault();
+    mouseDownRef.current = true;
+    
     const currentValue = grid[rowIndex][colIndex];
     
     let newValue;
@@ -39,6 +42,9 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
     setDragValue(null);
+    setTimeout(() => {
+      mouseDownRef.current = false;
+    }, 10);
   }, []);
 
   const handleTouchStart = useCallback((rowIndex, colIndex, event) => {
@@ -87,6 +93,15 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
     setDragValue(null);
   }, []);
 
+  const handleClick = useCallback((rowIndex, colIndex, event) => {
+    if (isComplete) return;
+    
+    if (!mouseDownRef.current) {
+      event.preventDefault();
+      onCellClick(rowIndex, colIndex);
+    }
+  }, [onCellClick, isComplete]);
+
   return (
     <div className={`nonogram-container ${isLargeGrid ? 'large-grid' : ''}`}>
       <div className="nonogram-grid-wrapper">
@@ -134,12 +149,7 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
                     onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                     onTouchStart={(e) => handleTouchStart(rowIndex, colIndex, e)}
                     onTouchEnd={handleTouchEnd}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (!isDragging && !isComplete) {
-                        onCellClick(rowIndex, colIndex);
-                      }
-                    }}
+                    onClick={(e) => handleClick(rowIndex, colIndex, e)}
                     disabled={isComplete}
                   >
                     {cell === 2 ? '×' : ''}

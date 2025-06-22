@@ -6,7 +6,6 @@ import GameHeader from '../components/GameHeader';
 import { 
   generatePuzzle, 
   checkWinCondition, 
-  checkWinConditionByClues 
 } from '../assets/code/nonogramUtils';
 
 const GamePage = () => {
@@ -21,9 +20,6 @@ const GamePage = () => {
     size: 5
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
   const gameConfig = location.state || { 
     difficulty: 'Easy', 
     generationType: 'Random Puzzle' 
@@ -35,8 +31,6 @@ const GamePage = () => {
 
   const initializeGame = async () => {
     try {
-      setIsLoading(true);
-      setError(null);
       
       const puzzle = await generatePuzzle(
         gameConfig.difficulty, 
@@ -56,10 +50,7 @@ const GamePage = () => {
         size: puzzle.size
       });
     } catch (err) {
-      console.error('Error initializing game:', err);
-      setError(err.message || 'Failed to generate puzzle');
     } finally {
-      setIsLoading(false);
     }
   };
 
@@ -132,50 +123,6 @@ const GamePage = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="container-fluid py-3">
-        <div className="row justify-content-center">
-          <div className="col-auto">
-            <div className="text-center">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <p className="mt-2">Generating puzzle...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container-fluid py-3">
-        <div className="row justify-content-center">
-          <div className="col-auto">
-            <div className="alert alert-danger text-center">
-              <h4>Error Loading Game</h4>
-              <p>{error}</p>
-              <button 
-                className="btn btn-primary me-2"
-                onClick={() => navigate('/')}
-              >
-                Back to Home
-              </button>
-              <button 
-                className="btn btn-outline-primary"
-                onClick={initializeGame}
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container-fluid py-3">
       <GameHeader 
@@ -183,7 +130,7 @@ const GamePage = () => {
         onHomeClick={() => navigate('/')}
       />
       
-      {gameState.isComplete && (
+      {gameState.isComplete && (//remove later
         <div className="row justify-content-center mb-3">
           <div className="col-auto">
             <div className="alert alert-success text-center">

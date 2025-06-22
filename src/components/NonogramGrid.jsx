@@ -42,8 +42,26 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
   }, []);
 
   const handleTouchStart = useCallback((rowIndex, colIndex, event) => {
-    handleMouseDown(rowIndex, colIndex, event);
-  }, [handleMouseDown]);
+    if (isComplete) return;
+    
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const currentValue = grid[rowIndex][colIndex];
+    
+    let newValue;
+    if (gameMode === 'fill') {
+      newValue = currentValue === 1 ? 0 : 1;
+    } else {
+      if (currentValue === 0) newValue = 2; 
+      else if (currentValue === 2) newValue = 0; 
+      else newValue = currentValue; 
+    }
+    
+    setIsDragging(true);
+    setDragValue(newValue);
+    onCellClick(rowIndex, colIndex);
+  }, [grid, onCellClick, isComplete, gameMode]);
 
   const handleTouchMove = useCallback((event) => {
     if (!isDragging || isComplete) return;
@@ -55,13 +73,19 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
     if (element && element.dataset.row && element.dataset.col) {
       const rowIndex = parseInt(element.dataset.row);
       const colIndex = parseInt(element.dataset.col);
-      handleMouseEnter(rowIndex, colIndex);
+      const currentValue = grid[rowIndex][colIndex];
+      
+      if (currentValue !== dragValue) {
+        onCellClick(rowIndex, colIndex);
+      }
     }
-  }, [isDragging, isComplete, handleMouseEnter]);
+  }, [isDragging, isComplete, grid, dragValue, onCellClick]);
 
-  const handleTouchEnd = useCallback(() => {
-    handleMouseUp();
-  }, [handleMouseUp]);
+  const handleTouchEnd = useCallback((event) => {
+    event.preventDefault();
+    setIsDragging(false);
+    setDragValue(null);
+  }, []);
 
   return (
     <div className={`nonogram-container ${isLargeGrid ? 'large-grid' : ''}`}>
@@ -109,6 +133,13 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameM
                     onMouseDown={(e) => handleMouseDown(rowIndex, colIndex, e)}
                     onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                     onTouchStart={(e) => handleTouchStart(rowIndex, colIndex, e)}
+                    onTouchEnd={handleTouchEnd}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!isDragging && !isComplete) {
+                        onCellClick(rowIndex, colIndex);
+                      }
+                    }}
                     disabled={isComplete}
                   >
                     {cell === 2 ? '×' : ''}

@@ -75,8 +75,7 @@
   border-color: var(--t-white) !important;  
 }
 
-
-/* stuff for fixing moble sizing */
+/*all the extra resizing stuffs*/
 
 .nonogram-container {
   width: 100%;
@@ -96,7 +95,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 4px;
-  min-height: 40px; 
+  min-height: 40px;
 }
 
 .col-clues-wrapper {
@@ -144,8 +143,10 @@
 .game-grid {
   display: flex;
   flex-direction: column;
-  touch-action: none;
+  touch-action: manipulation;
   user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
 }
 
 .grid-row {
@@ -164,8 +165,11 @@
   padding: 0;
   margin: 0;
   min-width: 0;
-  touch-action: none;
+  touch-action: manipulation;
   transition: background-color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
 }
 
 .grid-cell:disabled {

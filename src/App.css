@@ -1,0 +1,48 @@
+#root {
+  width: 100vw !important;
+  margin: 0;
+  padding: 0;
+  caret-color: transparent;
+}
+
+:root {
+  --t-red: #dd2d4a;
+  --t-white: #f9f9f9;
+  --t-black: #121420;
+  --t-gray: #2c2b3c;
+  --t-blue: #007ea7;
+}
+
+.GameForm{
+  background-color: var(--t-blue);
+  border-radius: 32px;
+}
+
+.HomeInfoButton{
+  background-color: var(--t-blue) !important;
+  color: var(--t-white) !important;
+  min-height: 5vh;
+  border-radius: 16px;
+}
+
+.GameToggleBox{
+  background-color: var(--t-white) !important;
+  border-radius: 16px;
+}
+
+.GameSettingsButton{
+
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.BlueText {
+  color: var(--t-blue)!important;
+}
+
+.PlayButton{
+  background-color: var(--t-white) !important;
+  color: var(--t-blue) !important;
+  border-radius: 16px;
+  min-height: 5vh;
+}

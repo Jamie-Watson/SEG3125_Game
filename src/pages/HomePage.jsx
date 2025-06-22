@@ -25,9 +25,9 @@ const HomePage = () => {
       <GameForm onPlayClick={handlePlayClick} />
     </div>
   </div>
-
-  <div className="row justify-content-center w-100 mt-2">
-    <div className="col-sm-4">
+<div className="row justify-content-center w-100 mt-2">
+  <div className="col-12 d-flex justify-content-center">
+    <div style={{ maxWidth: '400px', width: '100%' }}>
       <button
         className="btn btn-primary w-100 HomeInfoButton"
         onClick={() =>
@@ -42,6 +42,8 @@ const HomePage = () => {
       </button>
     </div>
   </div>
+</div>
+
 </div>
 
     </>

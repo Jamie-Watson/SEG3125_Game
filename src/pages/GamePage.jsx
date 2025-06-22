@@ -144,7 +144,7 @@ const GamePage = () => {
   return (
   <div className="container-fluid py-3 justify-content-center align-items-center">
     <div className="row justify-content-center mt-2">
-      <div className="col-12 col-sm-10 col-md-8 col-lg-4">
+      <div className="col-12 col-sm-10 col-md-4 col-lg-4">
         <button
           className="btn btn-primary w-100 HomeInfoButton"
           onClick={() =>
@@ -162,7 +162,7 @@ const GamePage = () => {
 
     {gameState.isComplete && (
       <div className="row justify-content-center my-3">
-        <div className="col-12 col-sm-10 col-md-8 col-lg-4">
+        <div className="col-12 col-sm-10 col-md-4 col-lg-4">
           <div className="alert successAlert text-center">
             <i class="bi bi-award fs-1"></i>
             <h4>Congratulations!</h4>

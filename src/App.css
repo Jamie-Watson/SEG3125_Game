@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('../public/RobotoCondensed-Medium.ttf') format('truetype'),
+       url('../public/RobotoCondensed-Medium.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+
 #root {
   width: 100vw !important;
   margin: 0;
@@ -123,6 +136,7 @@
   padding: 8px;
   font-weight: bold;
 }
+
 
 /*all the extra resizing stuffs*/
 

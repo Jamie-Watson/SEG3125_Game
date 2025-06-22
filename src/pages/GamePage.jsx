@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NonogramGrid from '../components/NonogramGrid';
 import GameControls from '../components/GameControls';
-import GameHeader from '../components/GameHeader';
 import { 
   generatePuzzle, 
   checkWinCondition, 
@@ -19,6 +18,8 @@ const GamePage = () => {
     isComplete: false,
     size: 5
   });
+  
+  const [gameMode, setGameMode] = useState('fill'); 
 
   const gameConfig = location.state || { 
     difficulty: 'Easy', 
@@ -31,7 +32,6 @@ const GamePage = () => {
 
   const initializeGame = async () => {
     try {
-      
       const puzzle = await generatePuzzle(
         gameConfig.difficulty, 
         gameConfig.generationType,
@@ -50,7 +50,7 @@ const GamePage = () => {
         size: puzzle.size
       });
     } catch (err) {
-    } finally {
+      console.error('Error initializing game:', err);
     }
   };
 
@@ -63,7 +63,14 @@ const GamePage = () => {
           if (forcedValue !== null) {
             return forcedValue;
           }
-          return cell === 1 ? 0 : 1;
+          
+          if (gameMode === 'fill') {
+            return cell === 1 ? 0 : 1; 
+          } else {
+            if (cell === 0) return 2; 
+            if (cell === 2) return 0; 
+            return cell; 
+          }
         }
         return cell;
       })
@@ -75,12 +82,15 @@ const GamePage = () => {
     };
     
     setGameState(updatedGameState);
-    
     checkForWin(newGrid);
   };
 
   const checkForWin = (grid) => {
-    const hasWon = checkWinCondition(grid, gameState.solution);
+    const normalizedGrid = grid.map(row => 
+      row.map(cell => cell === 1 ? 1 : 0)
+    );
+    
+    const hasWon = checkWinCondition(normalizedGrid, gameState.solution);
     
     if (hasWon) {
       setGameState(prev => ({
@@ -107,30 +117,53 @@ const GamePage = () => {
       grid: playerGrid,
       isComplete: false
     }));
+    setGameMode('fill');
   };
 
   const generateNewPuzzle = async () => {
     await initializeGame();
+    setGameMode('fill'); 
   };
 
-  const revealSolution = () => {
-    if (process.env.NODE_ENV === 'development') {
-      setGameState(prev => ({
-        ...prev,
-        grid: prev.solution.map(row => [...row]),
-        isComplete: true
-      }));
+  const handleRevealSolution = () => {
+    setGameState(prev => ({
+      ...prev,
+      grid: prev.solution.map(row => [...row]),
+      isComplete: true
+    }));
+  };
+
+  const handleHint = () => {
+    if (gameState.isComplete) return;
+    
+    const incorrectCells = [];
+    for (let row = 0; row < gameState.size; row++) {
+      for (let col = 0; col < gameState.size; col++) {
+        const currentCell = gameState.grid[row][col];
+        const solutionCell = gameState.solution[row][col];
+        
+        if ((solutionCell === 1 && currentCell !== 1) || 
+            (solutionCell === 0 && currentCell === 1)) {
+          incorrectCells.push({ row, col });
+        }
+      }
     }
+    
+    if (incorrectCells.length > 0) {
+      const randomCell = incorrectCells[Math.floor(Math.random() * incorrectCells.length)];
+      const correctValue = gameState.solution[randomCell.row][randomCell.col];
+      handleCellClick(randomCell.row, randomCell.col, correctValue);
+    }
+  };
+
+  const handleToggleMode = (newMode) => {
+    setGameMode(newMode);
   };
 
   return (
     <div className="container-fluid py-3">
-      <GameHeader 
-        difficulty={gameConfig.difficulty}
-        onHomeClick={() => navigate('/')}
-      />
       
-      {gameState.isComplete && (//remove later
+      {gameState.isComplete && (
         <div className="row justify-content-center mb-3">
           <div className="col-auto">
             <div className="alert alert-success text-center">
@@ -146,6 +179,10 @@ const GamePage = () => {
           <small className="text-muted">
             {gameConfig.generationType} • {gameState.size}×{gameState.size} Grid
           </small>
+          <br />
+          <small className="text-muted">
+            Mode: {gameMode === 'fill' ? 'Fill squares' : 'Mark with X'}
+          </small>
         </div>
       </div>
       
@@ -157,6 +194,7 @@ const GamePage = () => {
             colClues={gameState.colClues}
             onCellClick={handleCellClick}
             isComplete={gameState.isComplete}
+            gameMode={gameMode}
           />
         </div>
       </div>
@@ -165,29 +203,15 @@ const GamePage = () => {
         <div className="col-auto">
           <GameControls 
             onReset={resetGame}
+            onRevealSolution={handleRevealSolution}
+            onHint={handleHint}
+            onToggleMode={handleToggleMode}
             onNewPuzzle={generateNewPuzzle}
             isComplete={gameState.isComplete}
+            currentMode={gameMode}
           />
         </div>
       </div>
-      
-      {process.env.NODE_ENV === 'development' && (
-        <div className="row justify-content-center mt-3">
-          <div className="col-auto">
-            <div className="text-center">
-              <button 
-                className="btn btn-sm btn-outline-secondary me-2"
-                onClick={revealSolution}
-                title="Reveal solution (dev only)"
-              >Reveal Solution
-              </button>
-              <small className="text-muted d-block mt-1">
-                Development tools
-              </small>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete }) => {
+const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete, gameMode = 'fill' }) => {
   const gridSize = grid.length;
   const [isDragging, setIsDragging] = useState(false);
   const [dragValue, setDragValue] = useState(null);
@@ -10,12 +10,20 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete }) => 
     
     event.preventDefault();
     const currentValue = grid[rowIndex][colIndex];
-    const newValue = currentValue === 1 ? 0 : 1; 
+    
+    let newValue;
+    if (gameMode === 'fill') {
+      newValue = currentValue === 1 ? 0 : 1;
+    } else {
+      if (currentValue === 0) newValue = 2; 
+      else if (currentValue === 2) newValue = 0; 
+      else newValue = currentValue; 
+    }
     
     setIsDragging(true);
     setDragValue(newValue);
     onCellClick(rowIndex, colIndex);
-  }, [grid, onCellClick, isComplete]);
+  }, [grid, onCellClick, isComplete, gameMode]);
 
   const handleMouseEnter = useCallback((rowIndex, colIndex) => {
     if (!isDragging || isComplete) return;
@@ -76,7 +84,6 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete }) => 
           ))}
         </div>
 
-        {/* Game grid */}
         <div 
           className="game-grid"
           onMouseUp={handleMouseUp}
@@ -88,29 +95,30 @@ const NonogramGrid = ({ grid, rowClues, colClues, onCellClick, isComplete }) => 
                 <button
                   key={`${rowIndex}-${colIndex}`}
                   className={`grid-cell ${
-                    cell === 1 ? 'filled' : 'empty'
+                    cell === 1 ? 'filled' : cell === 2 ? 'crossed' : 'empty'
                   }`}
                   style={{
                     width: '40px',
                     height: '40px',
                     border: '1px solid #333',
                     backgroundColor: cell === 1 ? '#333' : 'white',
-                    cursor: isComplete ? 'default' : 'pointer'
+                    color: cell === 2 ? '#666' : 'transparent',
+                    cursor: isComplete ? 'default' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold'
                   }}
                   onMouseDown={(e) => handleMouseDown(rowIndex, colIndex, e)}
                   onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                   disabled={isComplete}
-                />
+                >
+                  {cell === 2 ? '×' : ''}
+                </button>
               ))}
             </div>
           ))}
         </div>
-      </div>
-      
-      <div className="text-center mt-2">
-        <small className="text-muted">
-          Click and drag to fill multiple cells
-        </small>
       </div>
     </div>
   );

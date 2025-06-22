@@ -46,3 +46,31 @@
   border-radius: 16px;
   min-height: 5vh;
 }
+
+.ToolBar{
+  background-color: var(--t-blue) !important;
+  color: var(--t-white) !important;
+  border-radius: 8px;
+}
+
+.ToolBarButton:hover{
+  background-color: var(--t-white) !important;
+  color: var(--t-blue) !important;
+}
+
+.ToolBarButton{
+  background-color: var(--t-blue) !important;
+  color: var(--t-white) !important;
+}
+
+.ToolBarToggleSelected{
+  background-color: var(--t-white) !important;
+  color: var(--t-black) !important;
+  border-color: var(--t-white) !important;
+}
+
+.ToolBarToggleUnselected{
+  background-color: var(--t-black) !important;
+  color: var(--t-white) !important;
+  border-color: var(--t-white) !important;  
+}

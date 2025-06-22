@@ -74,3 +74,311 @@
   color: var(--t-white) !important;
   border-color: var(--t-white) !important;  
 }
+
+
+/* stuff for fixing moble sizing */
+
+.nonogram-container {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: auto;
+  padding: 8px;
+}
+
+.nonogram-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: fit-content;
+}
+
+.col-clues-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+  min-height: 40px; 
+}
+
+.col-clues-wrapper {
+  display: flex;
+  align-items: flex-end; 
+}
+
+.col-clue {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+
+.col-clue-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+}
+
+.grid-and-row-clues {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row-clues-container {
+  display: flex;
+  flex-direction: column;
+  margin-right: 4px;
+}
+
+.row-clue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: bold;
+  padding-right: 4px;
+}
+
+.game-grid {
+  display: flex;
+  flex-direction: column;
+  touch-action: none;
+  user-select: none;
+}
+
+.grid-row {
+  display: flex;
+}
+
+.grid-cell {
+  border: 1px solid #333;
+  background-color: white;
+  color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  touch-action: none;
+  transition: background-color 0.1s ease;
+}
+
+.grid-cell:disabled {
+  cursor: default;
+}
+
+.grid-cell.filled {
+  background-color: #333;
+}
+
+.grid-cell.crossed {
+  background-color: white;
+  color: #666;
+}
+
+.grid-cell.empty {
+  background-color: white;
+}
+
+.grid-cell:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.grid-cell:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.grid-cell {
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+}
+
+.col-clue {
+  width: 18px;
+  min-height: 40px;
+  font-size: 8px;
+}
+
+.row-clue {
+  width: 35px;
+  height: 18px;
+  font-size: 8px;
+}
+
+.col-clues-wrapper {
+  margin-left: 39px;
+}
+
+@media (min-width: 576px) {
+  .grid-cell {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .col-clue {
+    width: 22px;
+    min-height: 44px;
+    font-size: 9px;
+  }
+
+  .col-clues-container {
+    min-height: 48px;
+  }
+
+  .row-clue {
+    width: 40px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  .col-clues-wrapper {
+    margin-left: 44px;
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-cell {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .col-clue {
+    width: 28px;
+    min-height: 50px;
+    font-size: 10px;
+  }
+
+  .col-clues-container {
+    min-height: 54px;
+  }
+
+  .row-clue {
+    width: 45px;
+    height: 28px;
+    font-size: 10px;
+  }
+
+  .col-clues-wrapper {
+    margin-left: 49px;
+  }
+}
+
+@media (min-width: 992px) {
+  .grid-cell {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .col-clue {
+    width: 32px;
+    min-height: 56px;
+    font-size: 11px;
+  }
+
+  .col-clues-container {
+    min-height: 60px;
+  }
+
+  .row-clue {
+    width: 50px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .col-clues-wrapper {
+    margin-left: 54px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid-cell {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .col-clue {
+    width: 36px;
+    min-height: 60px;
+    font-size: 12px;
+  }
+
+  .col-clues-container {
+    min-height: 64px;
+  }
+
+  .row-clue {
+    width: 55px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .col-clues-wrapper {
+    margin-left: 59px;
+  }
+}
+
+@media (max-width: 575px) {
+  .nonogram-container.large-grid .grid-cell {
+    width: 15px;
+    height: 15px;
+    font-size: 8px;
+  }
+
+  .nonogram-container.large-grid .col-clue {
+    width: 15px;
+    min-height: 35px;
+    font-size: 7px;
+  }
+
+  .nonogram-container.large-grid .col-clues-container {
+    min-height: 38px;
+  }
+
+  .nonogram-container.large-grid .row-clue {
+    width: 30px;
+    height: 15px;
+    font-size: 7px;
+  }
+
+  .nonogram-container.large-grid .col-clues-wrapper {
+    margin-left: 34px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nonogram-container.large-grid .grid-cell {
+    width: 13px;
+    height: 13px;
+    font-size: 7px;
+  }
+
+  .nonogram-container.large-grid .col-clue {
+    width: 13px;
+    min-height: 32px;
+    font-size: 6px;
+  }
+
+  .nonogram-container.large-grid .col-clues-container {
+    min-height: 35px;
+  }
+
+  .nonogram-container.large-grid .row-clue {
+    width: 28px;
+    height: 13px;
+    font-size: 6px;
+  }
+
+  .nonogram-container.large-grid .col-clues-wrapper {
+    margin-left: 32px;
+  }
+}

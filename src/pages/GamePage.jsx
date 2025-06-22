@@ -133,87 +133,79 @@ const GamePage = () => {
     }));
   };
 
-  const handleHint = () => {
-    if (gameState.isComplete) return;
-    
-    const incorrectCells = [];
-    for (let row = 0; row < gameState.size; row++) {
-      for (let col = 0; col < gameState.size; col++) {
-        const currentCell = gameState.grid[row][col];
-        const solutionCell = gameState.solution[row][col];
-        
-        if ((solutionCell === 1 && currentCell !== 1) || 
-            (solutionCell === 0 && currentCell === 1)) {
-          incorrectCells.push({ row, col });
-        }
-      }
-    }
-    
-    if (incorrectCells.length > 0) {
-      const randomCell = incorrectCells[Math.floor(Math.random() * incorrectCells.length)];
-      const correctValue = gameState.solution[randomCell.row][randomCell.col];
-      handleCellClick(randomCell.row, randomCell.col, correctValue);
-    }
-  };
-
   const handleToggleMode = (newMode) => {
     setGameMode(newMode);
   };
 
   return (
-    <div className="container-fluid py-3">
-      
-      {gameState.isComplete && (
-        <div className="row justify-content-center mb-3">
-          <div className="col-auto">
-            <div className="alert alert-success text-center">
-              <h4>Congratulations!</h4>
-              <p>You solved the {gameConfig.difficulty} nonogram!</p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      <div className="row justify-content-center mb-3">
-        <div className="col-auto text-center">
-          <small className="text-muted">
-            {gameConfig.generationType} • {gameState.size}×{gameState.size} Grid
-          </small>
-          <br />
-          <small className="text-muted">
-            Mode: {gameMode === 'fill' ? 'Fill squares' : 'Mark with X'}
-          </small>
-        </div>
-      </div>
-      
-      <div className="row justify-content-center mt-3">
-        <div className="col-auto">
-          <NonogramGrid
-            grid={gameState.grid}
-            rowClues={gameState.rowClues}
-            colClues={gameState.colClues}
-            onCellClick={handleCellClick}
-            isComplete={gameState.isComplete}
-            gameMode={gameMode}
-          />
-        </div>
-      </div>
-      
-      <div className="row justify-content-center mt-3">
-        <div className="col-auto">
-          <GameControls 
-            onReset={resetGame}
-            onRevealSolution={handleRevealSolution}
-            onHint={handleHint}
-            onToggleMode={handleToggleMode}
-            onNewPuzzle={generateNewPuzzle}
-            isComplete={gameState.isComplete}
-            currentMode={gameMode}
-          />
-        </div>
+  <div className="container-fluid py-3 justify-content-center align-items-center">
+    <div className="row justify-content-center mt-2">
+      <div className="col-12 col-sm-10 col-md-8 col-lg-4">
+        <button
+          className="btn btn-primary w-100 HomeInfoButton"
+          onClick={() =>
+            window.open(
+              "https://www.youtube.com/watch?v=EaxT0RGWrjw",
+              "_blank"
+            )
+          }
+        >
+          Learn How To Play
+          <i className="bi bi-box-arrow-up-right ms-2"></i>
+        </button>
       </div>
     </div>
-  );
+
+    {gameState.isComplete && (
+      <div className="row justify-content-center mb-3">
+        <div className="col-12 col-sm-10 col-md-8 col-lg-4">
+          <div className="alert alert-success text-center">
+            <h4>Congratulations!</h4>
+            <p>You solved the {gameConfig.difficulty} nonogram!</p>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <div className="row justify-content-center mb-3">
+      <div className="col-auto text-center">
+        <small className="text-muted">
+          {gameConfig.generationType} • {gameState.size}×{gameState.size} Grid
+        </small>
+        <br />
+        <small className="text-muted">
+          Mode: {gameMode === 'fill' ? 'Fill squares' : 'Mark with X'}
+        </small>
+      </div>
+    </div>
+
+    <div className="row justify-content-center mt-3">
+      <div className="col-auto">
+        <NonogramGrid
+          grid={gameState.grid}
+          rowClues={gameState.rowClues}
+          colClues={gameState.colClues}
+          onCellClick={handleCellClick}
+          isComplete={gameState.isComplete}
+          gameMode={gameMode}
+        />
+      </div>
+    </div>
+
+    <div className="row justify-content-center mt-3">
+      <div className="col-12 col-sm-10 col-md-8 col-lg-4">
+        <GameControls
+          onReset={resetGame}
+          onRevealSolution={handleRevealSolution}
+          onToggleMode={handleToggleMode}
+          onNewPuzzle={generateNewPuzzle}
+          isComplete={gameState.isComplete}
+          currentMode={gameMode}
+        />
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default GamePage;

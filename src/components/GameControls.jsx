@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const GameControls = ({
   onReset,
   onRevealSolution,
-  onHint,
   onToggleMode,
   isComplete,
   currentMode = "fill",
@@ -66,7 +65,7 @@ const GameControls = ({
       <button
         className="btn rounded-circle d-flex align-items-center justify-content-center ToolBarButton"
         onClick={() => navigate('/')} 
-        data-tooltip-id="hint-tooltip"
+        data-tooltip-id="home-tooltip"
         disabled={isComplete}
       >
         <i className="bi bi-house fs-2"></i>
@@ -74,7 +73,7 @@ const GameControls = ({
 
       <Tooltip id="reset-tooltip" content="Reset puzzle" />
       <Tooltip id="reveal-tooltip" content="Reveal solution" />
-      <Tooltip id="hint-tooltip" content="Return to the home page" />
+      <Tooltip id="home-tooltip" content="Return to the home page" />
       <Tooltip
         id="mode-tooltip"
         content={`Switch to ${mode === "fill" ? "cross" : "fill"} mode`}

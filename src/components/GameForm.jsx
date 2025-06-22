@@ -4,7 +4,6 @@ import { validateImageFile, generateImagePreview } from "../assets/code/nonogram
 const GameForm = ({ onPlayClick }) => {
   const [difficulty, setDifficulty] = useState("Easy");
   const [generationType, setGenerationType] = useState("Random Puzzle");
-  const [timerSettings, setTimerSettings] = useState("Timer On");
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -27,7 +26,6 @@ const GameForm = ({ onPlayClick }) => {
       await onPlayClick({
         difficulty,
         generationType,
-        timerSettings,
         imageFile: selectedFile,
         imageSettings: imageSettings 
       });
@@ -53,10 +51,6 @@ const GameForm = ({ onPlayClick }) => {
       setFileError("");
       setImagePreview(null);
     }
-  };
-
-  const handleTimerSettingsChange = (timer) => {
-    setTimerSettings(timer);
   };
 
   const generatePreview = async (file, currentDifficulty = difficulty) => {
@@ -244,31 +238,6 @@ const GameForm = ({ onPlayClick }) => {
               )}
             </div>
           )}
-        </div>
-      </div>
-
-      <div className="row justify-content-center mb-4 px-3 w-100">
-        <h2 className="text-white text-center mb-2 fs-1 fw-bold">Timer</h2>
-        <p className="text-white text-center mb-4 fs-5">
-          Choose whether to enable or disable the puzzle timer during gameplay
-        </p>
-
-        <div className="row GameToggleBox py-1">
-          {["Timer On", "Timer Off"].map((timer) => (
-            <div
-              key={timer}
-              className="col text-center py-3 fw-bold GameSettingsButton"
-              style={{
-                backgroundColor:
-                  timerSettings === timer ? "#1e88a8" : "transparent",
-                color: timerSettings === timer ? "white" : "#1e88a8",
-                transition: "all 0.3s ease",
-              }}
-              onClick={() => handleTimerSettingsChange(timer)}
-            >
-              {timer}
-            </div>
-          ))}
         </div>
       </div>
 

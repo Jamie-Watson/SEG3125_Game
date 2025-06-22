@@ -100,12 +100,8 @@ const GamePage = () => {
       }));
       
       setTimeout(() => {
-        navigate('/win', { 
-          state: { 
-            difficulty: gameConfig.difficulty,
-            generationType: gameConfig.generationType 
-          }
-        });
+        navigate(`/win?difficulty=${gameConfig.difficulty}&generationType=${gameConfig.generationType}`);
+
       }, 1500);
     }
   };
@@ -126,12 +122,20 @@ const GamePage = () => {
   };
 
   const handleRevealSolution = () => {
-    setGameState(prev => ({
-      ...prev,
-      grid: prev.solution.map(row => [...row]),
-      isComplete: true
-    }));
-  };
+  setGameState(prev => ({
+    ...prev,
+    grid: prev.solution.map(row => [...row]),
+    isComplete: true
+  }));
+
+  setTimeout(() => {
+  navigate(`/win?difficulty=${gameConfig.difficulty}&generationType=${gameConfig.generationType}`);
+
+
+  }, 1500); 
+};
+
+
 
   const handleToggleMode = (newMode) => {
     setGameMode(newMode);
@@ -157,9 +161,10 @@ const GamePage = () => {
     </div>
 
     {gameState.isComplete && (
-      <div className="row justify-content-center mb-3">
+      <div className="row justify-content-center my-3">
         <div className="col-12 col-sm-10 col-md-8 col-lg-4">
-          <div className="alert alert-success text-center">
+          <div className="alert successAlert text-center">
+            <i class="bi bi-award fs-1"></i>
             <h4>Congratulations!</h4>
             <p>You solved the {gameConfig.difficulty} nonogram!</p>
           </div>

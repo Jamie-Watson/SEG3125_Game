@@ -75,6 +75,55 @@
   border-color: var(--t-white) !important;  
 }
 
+.WinPage{
+  background-color: var(--t-gray) !important;
+}
+
+.WinPageCard{
+  background-color: var(--t-white) !important;
+  color: var(--t-black) !important;
+}
+
+.WinPageText{
+  color: var(--t-black);
+}
+
+.WinPagePlayButton{
+  background-color: var(--t-blue) !important;
+  color: var(--t-white) !important;
+  border-radius: 8px;
+}
+
+.WinPagePlayButton:hover{
+  background-color: var(--t-white) !important;
+  color: var(--t-blue) !important;
+}
+
+.WinPageDefaultButton{
+  background-color: var(--t-gray) !important;
+  color: var(--t-white) !important;
+  border-radius: 8px;
+}
+
+.WinPageDefaultButton:hover{
+  background-color: var(--t-white) !important;
+  color: var(--t-black) !important;
+}
+
+.WinPageImportantText{
+  color: var(--t-blue) !important;
+  font-weight: bold;
+}
+
+.successAlert {
+  background-color: rgba(0, 126, 167, 0.5); 
+  color: var(--t-white) !important;
+  border: 8px solid var(--t-blue);
+  border-radius: 16px;
+  padding: 8px;
+  font-weight: bold;
+}
+
 /*all the extra resizing stuffs*/
 
 .nonogram-container {

@@ -45,7 +45,7 @@ const WinPage = () => {
               </p>
 
               <div className="row justify-content-center">
-                <div className="col-lg-4">
+                <div className="col-lg-4 mb-3">
                   <button 
                     className="btn btn-primary w-100 WinPagePlayButton"
                     onClick={playAnother}
@@ -53,7 +53,7 @@ const WinPage = () => {
                     Play Another
                   </button>
                 </div>
-                <div className="col-lg-4">
+                <div className="col-lg-4 mb-3">
                   <button 
                     className="btn btn-outline-secondary w-100 WinPageDefaultButton"
                     onClick={() => navigate('/')}

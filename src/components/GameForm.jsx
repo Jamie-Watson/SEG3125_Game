@@ -132,11 +132,11 @@ const GameForm = ({ onPlayClick }) => {
           generated or from an image
         </p>
 
-        <div className="row GameToggleBox py-1">
+        <div className="row GameToggleBox py-1 justify-content-center">
           {["Easy", "Medium", "Hard"].map((level) => (
             <div
               key={level}
-              className="col text-center py-3 fw-bold GameSettingsButton"
+              className="col-lg text-center py-3 fw-bold GameSettingsButton mx-2"
               style={{
                 backgroundColor:
                   difficulty === level ? "#1e88a8" : "transparent",
@@ -145,7 +145,12 @@ const GameForm = ({ onPlayClick }) => {
               }}
               onClick={() => handleDifficultyChange(level)}
             >
-              {level}
+              <p className="fs-3">{level}</p>
+              <p className="fs-5">
+                {level === "Easy" && "(5x5)"}
+                {level === "Medium" && "(10x10)"}
+                {level === "Hard" && "(15x15)"}
+              </p>
             </div>
           ))}
         </div>
@@ -160,11 +165,11 @@ const GameForm = ({ onPlayClick }) => {
           the chosen difficulty
         </p>
 
-        <div className="row GameToggleBox py-1">
+        <div className="row GameToggleBox py-1 justify-content-center">
           {["Random Puzzle", "Upload Image"].map((genType) => (
             <div
               key={genType}
-              className="col text-center py-3 fw-bold GameSettingsButton"
+              className="col-lg text-center py-3 fw-bold GameSettingsButton"
               style={{
                 backgroundColor:
                   generationType === genType ? "#1e88a8" : "transparent",

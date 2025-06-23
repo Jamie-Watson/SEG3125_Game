@@ -13,7 +13,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="container-fluid d-flex flex-column align-items-center py-2">
+      <div className="container-fluid d-flex flex-column align-items-center py-2 justify-content-center">
   <div className="row">
     <div className="col-sm-12">
       <h1 className="display-1 text-center">Gram Jams</h1>
@@ -21,7 +21,7 @@ const HomePage = () => {
   </div>
 
   <div className="row justify-content-center flex-grow-1 align-items-center">
-    <div className="col-lg-8 d-flex">
+    <div className="col-lg-8 d-flex justify-content-center">
       <GameForm onPlayClick={handlePlayClick} />
     </div>
   </div>

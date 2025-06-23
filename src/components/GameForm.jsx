@@ -92,7 +92,7 @@ const GameForm = ({ onPlayClick }) => {
     const cellSize = Math.max(4, Math.min(12, 240 / size)); 
     
     return (
-      <div className="d-flex flex-column align-items-center mt-3">
+      <div className="d-flex flex-column align-items-center mt-3 justify-content-center">
         <div 
           className="preview-grid border border-white rounded p-2"
           style={{ 
@@ -125,7 +125,7 @@ const GameForm = ({ onPlayClick }) => {
 
   return (
     <div className="container-fluid GameForm p-3">
-      <div className="row justify-content-center mb-4 px-3 w-100">
+      <div className="row justify-content-center mb-4 px-3">
         <h2 className="text-white text-center mb-2 fs-1 fw-bold">Difficulty</h2>
         <p className="text-white text-center mb-4 fs-5">
           This will affect the size and complexity of your puzzle, whether
@@ -156,7 +156,7 @@ const GameForm = ({ onPlayClick }) => {
         </div>
       </div>
 
-      <div className="row justify-content-center mb-4 px-3 w-100">
+      <div className="row justify-content-center mb-4 px-3">
         <h2 className="text-white text-center mb-2 fs-1 fw-bold">
           Generation Type
         </h2>
@@ -246,7 +246,7 @@ const GameForm = ({ onPlayClick }) => {
         </div>
       </div>
 
-      <div className="row justify-content-center px-3 w-100">
+      <div className="row justify-content-center px-3">
         <div className="col-sm-4">
           <button
             className="btn btn-success w-100 PlayButton fw-bold"
